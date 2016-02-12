@@ -12,17 +12,22 @@ public class Calculate {
 		ix = new float[61];
 		iy = new float[61];
 		for (int i = 1; i <= n; i++)
-			for (int j = 1; j <= n; j++) {
-				if (i == j)
-					continue;
+			for (int j = i+1; j <= n; j++) {
+				
 				// Find the distance between the centers.
 				dx = x[i] - x[j];
 				dy = y[i] - y[j];
 				dist = (float) Math.sqrt(dx * dx + dy * dy);
-
+				
 				// See how many solutions there are.
 				// (R0-R1)^2 <= (x0-x1)^2+(y0-y1)^2 <= (R0+R1)^2
-				if ((dist >= Math.round(r[i] - r[j])) && (dist <= (r[i] + r[j])))
+				if((dist==0)&&(r[i]==r[j]))
+					continue;
+				else if(dist < Math.abs(r[i] - r[j]))
+						continue;
+				else if(dist > (r[i] + r[j]))
+						continue;
+				else
 				{
 					
 					// Find a and h.
@@ -32,7 +37,6 @@ public class Calculate {
 				// Find P2.
 				cx = x[i] + a * (x[j] - x[i]) / dist;
 				cy = y[i] + a * (y[j] - y[i]) / dist;
-				//System.out.println("i="+i+",j="+j+",k="+k);
 				if (dist == r[i] + r[j]) {
 					k++;
 					ix[k] = (float) (cx + h * (y[j] - y[i]) / dist);
@@ -47,7 +51,6 @@ public class Calculate {
 					ix[k] = (float) (cx - h * (y[j] - y[i]) / dist);
 					iy[k] = (float) (cy + h * (x[j] - x[i]) / dist);
 				}
-				
 			}
 	}ni=k;
 	}
@@ -70,13 +73,12 @@ public class Calculate {
 				dx = ix[i] - x[id[j]];
 				dy = iy[i] - y[id[j]];
 				dist = (float) Math.sqrt(dx * dx + dy * dy);
-				//dist=Math.round(dist);
+				dist=Math.round(dist);
 				if (dist <= r[id[j]]) {
 					sumx += ix[i];
 					sumy += iy[i];
 					t++;
 				}
-
 			}
 		locx = sumx / t;
 		locy = sumy / t;
